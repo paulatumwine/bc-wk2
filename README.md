@@ -27,5 +27,25 @@ pip install -r requirements.txt
 - And then, finally, to run the app:
 
 ```
-python dojo_app.py argument(s)
+python dojo_app.py -h
+```
+- Running the command above will produce output that's similar to the sample below.
+```docopt
+Usage:
+    dojo_app.py create_room <room_type> <room_name>...
+    dojo_app.py add_person <person_name> <FELLOW|STAFF> [wants_accommodation]
+    dojo_app.py add_person <arguments>...
+    dojo_app.py -h | --help | -v | --version
+
+Options:
+  -h --help     Show this screen.
+  -v --version  Show version.
+```
+
+## Tests
+
+This project sticks with Python's inbuilt unittest package to create and execute tests. To run the project tests (from within the project root directory), run:
+
+```python
+python -m unittest discover -p *_tests.py
 ```
