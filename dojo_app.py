@@ -2,6 +2,9 @@
     dojo_app create_room <room_type> <room_name>...
     dojo_app add_person <person_name> <FELLOW|STAFF> [wants_accommodation]
     dojo_app add_person <arguments>...
+    print_room <room_name>
+    print_allocations [-o=filename]
+    print_unallocated [-o=filename]
     dojo_app -i | --interactive | -h | --help | -v | --version
 
 Options:
@@ -25,13 +28,17 @@ def docopt_cmd(func):
     def fn(self, arg):
         try:
             opt = docopt(fn.__doc__, arg)
+            return func(self, opt)
+        except Exception as e:
+            print('Sorry, an error occurred!')
+            print(e)
+            return
         except DocoptExit as e:
             print('Invalid Command!')
             print(e)
             return
         except SystemExit:
             return
-        return func(self, opt)
 
     fn.__name__ = func.__name__
     fn.__doc__ = func.__doc__
@@ -52,6 +59,11 @@ class DojoApp(cmd.Cmd):
                 Office(room_name)
             elif 'livingspace' == arg['<room_type>']:
                 LivingSpace(room_name)
+
+    @docopt_cmd
+    def do_print_room(self, arg):
+        """Usage: print_room <room_name>"""
+        Room.print_room_occupants(arg['<room_name>'])
 
     @docopt_cmd
     def do_add_person(self, arg):

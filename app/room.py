@@ -35,6 +35,21 @@ class Room(object):
 
         Room.rooms_total += 1
 
+    @staticmethod
+    def print_room_occupants(name):
+        room_names = [room.name for room in Storage.rooms]
+        present_rooms = set(room_names)
+        if name not in present_rooms:
+            raise TypeError('{} does not exist'.format(name))
+
+        occupants = [person.name for person in Storage.people if
+                     person.office_assigned.name == name or person.living_space_assigned == name]
+        if len(occupants) == 0:
+            print('{} has no occupants yet'.format(name))
+
+        for occupant in occupants:
+            print(occupant)
+
 
 class Office(Room):
     """
