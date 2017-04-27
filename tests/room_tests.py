@@ -3,6 +3,7 @@ import unittest
 from io import StringIO
 
 from app.room import *
+from app.person import *
 
 
 class RoomTests(unittest.TestCase):
@@ -92,3 +93,15 @@ class RoomTests(unittest.TestCase):
     def test_printing_occupants_of_non_existent_room(self):
         """Raise an error if a room that does not exist is provided"""
         self.assertRaises(TypeError, Room.print_room_occupants, 'RandomOne')
+
+    def test_printing_allocations_successfully(self):
+        """Test that all allocations are able to be printed successfully"""
+        staff_zero = Staff('Deal Jackson')
+        captured_stdout = sys.stdout
+        try:
+            sys.stdout = StringIO()
+            Room.print_allocations()
+            output = sys.stdout.getvalue().strip()
+            self.assertIn('Deal Jackson', output)
+        finally:
+            sys.stdout = captured_stdout
