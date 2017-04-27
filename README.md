@@ -35,12 +35,31 @@ Usage:
     dojo_app create_room <room_type> <room_name>...
     dojo_app add_person <person_name> <FELLOW|STAFF> [wants_accommodation]
     dojo_app add_person <arguments>...
+    print_room <room_name>
+    print_allocations [--outfile=FILE]
+    print_unallocated [--outfile=FILE]
     dojo_app -i | --interactive | -h | --help | -v | --version
 
 Options:
   -i, --interactive  Interactive mode.
   -h --help     Show this screen.
   -v --version  Show version.
+```
+- To use the app, run:
+```
+python dojo_app.py -i
+```
+- Running this command brings up the app prompt, at which you can use the app interactively.
+```
+Welcome to The Dojo App! (Type help for a list of commands)
+>>> help
+
+Documented commands (type help <topic>):
+========================================
+add_person   help               print_room         quit
+create_room  print_allocations  print_unallocated
+
+>>>
 ```
 
 ## Tests
