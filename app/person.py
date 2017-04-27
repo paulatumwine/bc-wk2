@@ -27,8 +27,13 @@ class Person(object):
         self.name = name
         self.office_assigned = ''
 
-        # Update program storage and counters
+        # Update program storage and counters; while remembering to check for duplicates first
+        people_names = [person.name for person in Storage.people]
+        already_seen = set(people_names)
+        if name in already_seen:
+            raise TypeError('{} already added'.format(name))
         Storage.people.append(self)
+
         Person.people_total += 1
 
     def allocate_office(self):
@@ -54,11 +59,11 @@ class Person(object):
                     if room.assignees_count < room.capacity:
                         return room
 
-        # Either no rooms yet, or all that exist are full
+        # Either no rooms yet, or all that exist are full; in any case, create a new one
         if LivingSpace.room_type == room_type:
-            return LivingSpace('Random')
+            return LivingSpace('Random #{}'.format(LivingSpace.rooms_total + 1))
         else:
-            return Office('Random')
+            return Office('Random #{}'.format(Office.rooms_total + 1))
 
 
 class Fellow(Person):

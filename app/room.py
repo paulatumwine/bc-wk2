@@ -25,7 +25,14 @@ class Room(object):
         self.id = generate_id()
         self.name = name
         self.assignees_count = 0
+
+        # Update program storage and counters; while remembering to check for duplicates first
+        room_names = [room.name for room in Storage.rooms]
+        already_seen = set(room_names)
+        if name in already_seen:
+            raise TypeError('{} already added'.format(name))
         Storage.rooms.append(self)
+
         Room.rooms_total += 1
 
 
