@@ -38,12 +38,14 @@ Usage:
     print_room <room_name>
     print_allocations [--outfile=FILE]
     print_unallocated [--outfile=FILE]
+    reallocate_person <person_identifier> <new_room_name>
+    load_people --infile=FILE
     dojo_app -i | --interactive | -h | --help | -v | --version
 
 Options:
-  -i, --interactive  Interactive mode.
-  -h --help     Show this screen.
-  -v --version  Show version.
+  -i, --interactive  interactive mode
+  -h --help     Show this screen
+  -v --version  Show version
 ```
 - To use the app, run:
 ```
@@ -56,8 +58,9 @@ Welcome to The Dojo App! (Type help for a list of commands)
 
 Documented commands (type help <topic>):
 ========================================
-add_person   help               print_room         quit
-create_room  print_allocations  print_unallocated
+add_person   load_people        print_unallocated
+create_room  print_allocations  quit
+help         print_room         reallocate_person
 
 >>>
 ```
