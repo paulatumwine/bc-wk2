@@ -30,14 +30,15 @@ pip install -r requirements.txt
 python dojo_app.py -h
 ```
 - Running the command above will produce output that's similar to the sample below.
-```docopt
+```
 Usage:
-    dojo_app.py create_room <room_type> <room_name>...
-    dojo_app.py add_person <person_name> <FELLOW|STAFF> [wants_accommodation]
-    dojo_app.py add_person <arguments>...
-    dojo_app.py -h | --help | -v | --version
+    dojo_app create_room <room_type> <room_name>...
+    dojo_app add_person <person_name> <FELLOW|STAFF> [wants_accommodation]
+    dojo_app add_person <arguments>...
+    dojo_app -i | --interactive | -h | --help | -v | --version
 
 Options:
+  -i, --interactive  Interactive mode.
   -h --help     Show this screen.
   -v --version  Show version.
 ```
