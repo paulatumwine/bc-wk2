@@ -1,7 +1,7 @@
 from abc import ABCMeta
 
 from .room import Office, LivingSpace
-from .utility import generate_id
+from .utility import generate_id, Storage
 
 
 class Person(object):
@@ -25,16 +25,36 @@ class Person(object):
 
         self.id = generate_id()
         self.name = name
+        self.office_assigned = ''
 
-        # TODO: Randomise the room selection later...for now, just create a new one
-        office_instance = Office('Random')
-        if office_instance.assignees_count < Office.capacity:
-            self.office_assigned = office_instance
-            office_instance.assignees_count += 1
-            print(
-                '{} has been allocated the {} {}'.format(name.split()[0], Office.room_type, self.office_assigned.name))
-
+        # Update program storage and counters
+        Storage.people.append(self)
         Person.people_total += 1
+
+    def allocate_office(self):
+        """Method used to allocate an office to a person"""
+        office_instance = self.select_random_room()
+        self.office_assigned = office_instance
+        office_instance.assignees_count += 1
+        print(
+            '{} has been allocated the {} {}'.format(self.name.split()[0], Office.room_type, self.office_assigned.name))
+
+    def select_random_room(self, person_type=''):
+        """
+        Instance method that uses a simple algorithm to randomise the room assigned. It will return a the first 
+        room encountered that is not full yet, or create one if no such room exists
+        """
+        room_count = len(Storage.rooms)
+        if room_count > 0:
+            for room in Storage.rooms:
+                if room.assignees_count < room.capacity:
+                    return room
+
+        # Either no rooms yet, or all that exist are full
+        if Fellow.person_type == person_type:
+            return LivingSpace('Random')
+        else:
+            return Office('Random')
 
 
 class Fellow(Person):
@@ -49,14 +69,19 @@ class Fellow(Person):
             raise TypeError('second argument should be one of \'Y\' or \'N\'')
 
         super().__init__(name)
+        self.living_space_assigned = ''
         print('{} {} has been successfully added.'.format(Fellow.person_type, name))
 
+        self.allocate_office()
+        self.allocate_living_space(wants_accommodation)
+
+    def allocate_living_space(self, wants_accommodation):
         if 'Y' == wants_accommodation:
-            living_space_instance = LivingSpace('Random')
+            living_space_instance = self.select_random_room(Fellow.person_type)
             if living_space_instance.assignees_count < Office.capacity:
                 self.living_space_assigned = living_space_instance
                 living_space_instance.assignees_count += 1
-            print('{} has been allocated the {} {}'.format(name.split()[0], LivingSpace.room_type,
+            print('{} has been allocated the {} {}'.format(self.name.split()[0], LivingSpace.room_type,
                                                            self.living_space_assigned.name))
 
 
@@ -70,3 +95,5 @@ class Staff(Person):
     def __init__(self, name):
         super().__init__(name)
         print('{} {} has been successfully added.'.format(Staff.person_type, name))
+
+        self.allocate_office()
