@@ -88,3 +88,7 @@ class RoomTests(unittest.TestCase):
         room_one = LivingSpace('RandomSpace')
         self.assertIsInstance(room_one, LivingSpace, msg='Object should be an instance of the `LivingSpace` class')
         self.assertRaises(TypeError, LivingSpace, 'RandomSpace')
+
+    def test_printing_occupants_of_non_existent_room(self):
+        """Raise an error if a room that does not exist is provided"""
+        self.assertRaises(TypeError, Room.print_room_occupants, 'RandomOne')
