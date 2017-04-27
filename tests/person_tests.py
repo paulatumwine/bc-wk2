@@ -1,56 +1,90 @@
 import sys
 import unittest
+from io import StringIO
 
-from ..app.person import Person
+from app.person import Person, Fellow, Staff
 
 
-class TestAddPerson(unittest.TestCase):
+class PersonTests(unittest.TestCase):
     """
-    Unit tests for the add_person method of the Person class
+    Unit tests for the Person class and all its descendants
     """
 
-    def setUp(self):
-        self.person_instance = Person()
+    def test_add_staff_successfully(self):
+        """
+        Tests that staff is added successfully
+        """
+        initial_person_count = Person.people_total
+        suspect_zero = Staff('Phil Jackson')
+        self.assertIsInstance(suspect_zero, Staff, msg='Object should be an instance of the `Staff` class')
+        final_person_count = Person.people_total
+        self.assertEqual(final_person_count - initial_person_count, 1, msg='Total count should have increased by one')
 
-    def test_add_person_successfully(self):
+    def test_add_fellow_successfully(self):
         """
-        Tests that person is added successfully
+        Tests that a fellow is added successfully
         """
-        initial_person_count = len(self.person_instance.all_people)
-        person_zero = self.person_instance.add_person('Phil Jackson', 'Staff')
-        self.assertTrue(person_zero)
-        new_person_count = len(self.room_instance.all_people)
-        self.assertEqual(new_person_count - initial_person_count, 1)
+        initial_person_count = Person.people_total
+        suspect_zero = Fellow('Jill Jackson')
+        self.assertIsInstance(suspect_zero, Fellow, msg='Object should be an instance of the `Fellow` class')
+        half_way_person_count = Person.people_total
+        self.assertEqual(half_way_person_count - initial_person_count, 1,
+                         msg='Total count should have increased by one')
+        suspect_one = Fellow('Jill Jackson', 'Y')
+        self.assertIsInstance(suspect_one, Fellow, msg='Object should be an instance of the `Fellow` class')
+        final_person_count = Person.people_total
+        self.assertEqual(final_person_count - half_way_person_count, 1, msg='Total count should have increased by one')
 
-    def test_add_person_arguments(self):
+    def test_staff_constructor_arguments(self):
         """
-        Test that add_person only accepts string arguments
+        Test that the Staff constructor only accepts a single string argument
         """
-        self.assertRaises(ValueError, self.person_instance.add_person(1))
-        self.assertRaises(ValueError, self.person_instance.add_person(1, 2))
-        self.assertRaises(ValueError, self.person_instance.add_person('Blue', 2))
-        self.assertRaises(ValueError, self.person_instance.add_person(1, 'Office'))
-        self.assertRaises(ValueError, self.person_instance.add_person('1', 'Office'))
-        self.assertRaises(ValueError, self.person_instance.add_person('Orange', '2'))
-        self.assertRaises(ValueError, self.person_instance.add_person('Orange', '2', 1))
-        self.assertRaises(ValueError, self.person_instance.add_person('Orange', '2', []))
+        self.assertRaises(TypeError, Staff, 1)
+        self.assertRaises(TypeError, Staff, [])
+        self.assertRaises(TypeError, Staff, '12')
+        self.assertRaises(TypeError, Staff, 1, 2)
+        self.assertRaises(TypeError, Staff, '12', 'Office')
 
-    def test_add_person_takes_only_specific_args(self):
+    def test_fellow_constructor_arguments(self):
         """
-        Tests that the second and third arguments accept only pre-specified arguments
+        Test that the Fellow constructor accepts at least one and at most two string arguments
         """
-        self.assertRaises(ValueError, self.person_instance.add_person('Orange', 'Black'))
-        self.assertRaises(ValueError, self.person_instance.add_person('Orange', 'Fellow', 'Black'))
+        self.assertRaises(TypeError, Fellow, 1)
+        self.assertRaises(TypeError, Fellow, [])
+        self.assertRaises(TypeError, Fellow, '12')
+        self.assertRaises(TypeError, Fellow, 1, 2, 3)
 
-    def test_add_person_output_is_valid(self):
+    def test_fellow_constructor_second_arguments(self):
         """
-        Tests that the add_person method outputs content in the expected format
+        Test that the Fellow constructor's second argument is one of either 'Y' or 'N'
+        """
+        self.assertRaises(TypeError, Fellow, 'Name', 'Other')
+
+    def test_add_staff_output_is_valid(self):
+        """
+        Tests that the staff addition outputs to stdout content in the expected format
         """
         captured_stdout = sys.stdout
         try:
-            self.add_person.create_room('James Patterson', 'Fellow', 'Y')
+            sys.stdout = StringIO()
+            Staff('Reel Jackson')
             output = sys.stdout.getvalue().strip()
-            self.assertContains(output, 'successfully added.')
-            self.assertContains(output, 'allocated')
+            self.assertIn('Staff Reel Jackson has been successfully added.', output)
+            self.assertIn('Reel has been allocated the office', output)
+        finally:
+            sys.stdout = captured_stdout
+
+    def test_add_fellow_output_is_valid(self):
+        """
+        Tests that the staff addition outputs to stdout content in the expected format
+        """
+        captured_stdout = sys.stdout
+        try:
+            sys.stdout = StringIO()
+            Fellow('Peele Jackson', 'Y')
+            output = sys.stdout.getvalue().strip()
+            self.assertIn('Fellow Peele Jackson has been successfully added.', output)
+            self.assertIn('Peele has been allocated the office', output)
+            self.assertIn('Peele has been allocated the livingspace', output)
         finally:
             sys.stdout = captured_stdout

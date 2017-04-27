@@ -1,52 +1,79 @@
 import sys
 import unittest
+from io import StringIO
 
-from ..app.room import Room
+from app.room import Room, Office, LivingSpace
 
 
-class TestCreateRoom(unittest.TestCase):
+class RoomTests(unittest.TestCase):
     """
-    Unit tests for the create_room method in the Room class
+    Unit tests for the Room class and its descendants
     """
 
-    def setUp(self):
-        self.room_instance = Room()
+    def test_add_office_successfully(self):
+        """
+        Test successful office addition
+        """
+        initial_room_count = Room.rooms_total
+        office_instance = Office('Office')
+        self.assertIsInstance(office_instance, Office, msg='Object should be an instance of the `Office` class')
+        final_room_count = Room.rooms_total
+        self.assertEqual(final_room_count - initial_room_count, 1, msg='Total count should have increased by one')
 
-    def test_create_room_successfully(self):
+    def test_add_living_space_successfully(self):
         """
-        Tests successful room creation
+        Test successful living space addition
         """
-        initial_room_count = len(self.room_instance.all_rooms)
-        blue_office = self.room_instance.create_room('Blue', 'Office')
-        self.assertTrue(blue_office)
-        new_room_count = len(self.room_instance.all_rooms)
-        self.assertEqual(new_room_count - initial_room_count, 1)
+        initial_room_count = Room.rooms_total
+        living_space_instance = LivingSpace('LivingSpace')
+        self.assertIsInstance(living_space_instance, LivingSpace,
+                              msg='Object should be an instance of the `LivingSpace` class')
+        final_room_count = Room.rooms_total
+        self.assertEqual(final_room_count - initial_room_count, 1, msg='Total count should have increased by one')
 
-    def test_create_room_arguments(self):
+    def test_office_constructor_arguments(self):
         """
-        Tests if either or both of the arguments to the create_room method is not a string
+        Tests that the Office constructor only accepts a single string argument
         """
-        self.assertRaises(ValueError, self.room_instance.create_room(1))
-        self.assertRaises(ValueError, self.room_instance.create_room(1, 2))
-        self.assertRaises(ValueError, self.room_instance.create_room('Blue', 2))
-        self.assertRaises(ValueError, self.room_instance.create_room(1, 'Office'))
-        self.assertRaises(ValueError, self.room_instance.create_room('1', 'Office'))
-        self.assertRaises(ValueError, self.room_instance.create_room('Orange', '2'))
+        self.assertRaises(TypeError, Office, 1)
+        self.assertRaises(TypeError, Office, [])
+        self.assertRaises(TypeError, Office, '12')
+        self.assertRaises(TypeError, Office, 1, 2)
+        self.assertRaises(TypeError, Office, '12', 'Office')
 
-    def test_create_room_takes_only_specific_args(self):
+    def test_living_space_constructor_arguments(self):
         """
-        Tests if second argument is a valid room type
+        Tests that the LivingSpace constructor only accepts a single string argument
         """
-        self.assertRaises(ValueError, self.room_instance.create_room('Orange', 'Black'))
+        self.assertRaises(TypeError, LivingSpace, 1)
+        self.assertRaises(TypeError, LivingSpace, [])
+        self.assertRaises(TypeError, LivingSpace, '12')
+        self.assertRaises(TypeError, LivingSpace, 1, 2)
+        self.assertRaises(TypeError, LivingSpace, '12', 'Office')
 
-    def test_create_room_output_is_valid(self):
+    def test_add_office_output_is_valid(self):
         """
-        Tests that the create_room method outputs content in the expected format
+        Tests that office addition outputs to stdout content in the expected format
         """
         captured_stdout = sys.stdout
         try:
-            self.room_instance.create_room('Blue', 'Office')
+            sys.stdout = StringIO()
+            captured_stdout = sys.stdout
+            Office('Office')
             output = sys.stdout.getvalue().strip()
-            self.assertContains(output, 'successfully created!')
+            self.assertEquals(output, 'An office called Office has been successfully created!')
+        finally:
+            sys.stdout = captured_stdout
+
+    def test_add_living_space_output_is_valid(self):
+        """
+        Tests that living space addition outputs to stdout content in the expected format
+        """
+        captured_stdout = sys.stdout
+        try:
+            sys.stdout = StringIO()
+            LivingSpace('LivingSpace')
+            output = sys.stdout.getvalue().strip()
+            self.assertEquals(output, 'A livingspace called LivingSpace has been successfully created!')
         finally:
             sys.stdout = captured_stdout
