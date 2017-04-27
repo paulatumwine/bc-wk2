@@ -1,6 +1,6 @@
 from abc import ABCMeta
 
-from .utility import generate_id
+from .utility import generate_id, Storage
 
 
 class Room(object):
@@ -25,6 +25,7 @@ class Room(object):
         self.id = generate_id()
         self.name = name
         self.assignees_count = 0
+        Storage.rooms.append(self)
         Room.rooms_total += 1
 
 
