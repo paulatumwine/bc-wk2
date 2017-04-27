@@ -9,7 +9,7 @@ Options:
   -h --help     Show this screen.
   -v --version  Show version.
 """
-import sys, cmd
+import cmd
 from docopt import docopt, DocoptExit
 
 from app.person import *
@@ -67,7 +67,10 @@ class DojoApp(cmd.Cmd):
         elif 'FELLOW' in arguments:
             names = arg['<arguments>'][0:arguments.index('FELLOW')]
             name = ' '.join(names)
-            Fellow(name, arg['<arguments>'][-1])
+            if arg['<arguments>'][-1] in ['Y', 'N']:
+                Fellow(name, arg['<arguments>'][-1])
+            else:
+                Fellow(name)
 
     @staticmethod
     def do_quit(arg):

@@ -31,7 +31,7 @@ class RoomTests(unittest.TestCase):
         final_room_count = Room.rooms_total
         self.assertEqual(final_room_count - initial_room_count, 1, msg='Total count should have increased by one')
 
-    def test_office_constructor_arguments(self):
+    def test_office_valid_instantiation(self):
         """
         Tests that the Office constructor only accepts a single string argument
         """
@@ -41,7 +41,7 @@ class RoomTests(unittest.TestCase):
         self.assertRaises(TypeError, Office, 1, 2)
         self.assertRaises(TypeError, Office, '12', 'Office')
 
-    def test_living_space_constructor_arguments(self):
+    def test_living_space_valid_instantiation(self):
         """
         Tests that the LivingSpace constructor only accepts a single string argument
         """

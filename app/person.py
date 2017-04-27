@@ -39,7 +39,7 @@ class Person(object):
         print(
             '{} has been allocated the {} {}'.format(self.name.split()[0], Office.room_type, self.office_assigned.name))
 
-    def select_random_room(self, person_type=''):
+    def select_random_room(self, room_type=''):
         """
         Instance method that uses a simple algorithm to randomise the room assigned. It will return a the first 
         room encountered that is not full yet, or create one if no such room exists
@@ -47,11 +47,15 @@ class Person(object):
         room_count = len(Storage.rooms)
         if room_count > 0:
             for room in Storage.rooms:
-                if room.assignees_count < room.capacity:
-                    return room
+                if room_type != '':
+                    if room.room_type == room_type and room.assignees_count < room.capacity:
+                        return room
+                else:
+                    if room.assignees_count < room.capacity:
+                        return room
 
         # Either no rooms yet, or all that exist are full
-        if Fellow.person_type == person_type:
+        if LivingSpace.room_type == room_type:
             return LivingSpace('Random')
         else:
             return Office('Random')
@@ -77,7 +81,7 @@ class Fellow(Person):
 
     def allocate_living_space(self, wants_accommodation):
         if 'Y' == wants_accommodation:
-            living_space_instance = self.select_random_room(Fellow.person_type)
+            living_space_instance = self.select_random_room(LivingSpace.room_type)
             if living_space_instance.assignees_count < Office.capacity:
                 self.living_space_assigned = living_space_instance
                 living_space_instance.assignees_count += 1

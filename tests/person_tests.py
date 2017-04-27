@@ -48,7 +48,7 @@ class PersonTests(unittest.TestCase):
         final_person_count = Person.people_total
         self.assertEqual(final_person_count - half_way_person_count, 1, msg='Total count should have increased by one')
 
-    def test_staff_constructor_arguments(self):
+    def test_staff_valid_instantiation(self):
         """
         Test that the Staff constructor only accepts a single string argument
         """
@@ -58,7 +58,7 @@ class PersonTests(unittest.TestCase):
         self.assertRaises(TypeError, Staff, 1, 2)
         self.assertRaises(TypeError, Staff, '12', 'Office')
 
-    def test_fellow_constructor_arguments(self):
+    def test_fellow_valid_instantiation(self):
         """
         Test that the Fellow constructor accepts at least one and at most two string arguments
         """
