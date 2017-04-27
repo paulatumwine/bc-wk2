@@ -3,8 +3,8 @@
     dojo_app add_person <person_name> <FELLOW|STAFF> [wants_accommodation]
     dojo_app add_person <arguments>...
     print_room <room_name>
-    print_allocations [-o=filename]
-    print_unallocated [-o=filename]
+    print_allocations [--outfile=FILE]
+    print_unallocated [--outfile=FILE]
     dojo_app -i | --interactive | -h | --help | -v | --version
 
 Options:
@@ -64,6 +64,22 @@ class DojoApp(cmd.Cmd):
     def do_print_room(self, arg):
         """Usage: print_room <room_name>"""
         Room.print_room_occupants(arg['<room_name>'])
+
+    @docopt_cmd
+    def do_print_allocations(self, arg):
+        """Usage: print_allocations [--outfile=FILE]"""
+        if arg['--outfile']:
+            Room.print_allocations(arg['--outfile'])
+        else:
+            Room.print_allocations()
+
+    @docopt_cmd
+    def do_print_unallocated(self, arg):
+        """Usage: print_unallocated [--outfile=FILE]"""
+        if arg['--outfile']:
+            Room.print_unallocated(arg['--outfile'])
+        else:
+            Room.print_unallocated()
 
     @docopt_cmd
     def do_add_person(self, arg):

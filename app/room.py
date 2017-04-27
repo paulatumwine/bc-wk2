@@ -42,13 +42,64 @@ class Room(object):
         if name not in present_rooms:
             raise TypeError('{} does not exist'.format(name))
 
-        occupants = [person.name for person in Storage.people if
-                     person.office_assigned.name == name or person.living_space_assigned == name]
+        office_occupants = [person.name for person in Storage.people if person.office_assigned.name == name]
+        living_space_occupants = [person.name for person in Storage.people if
+                                  (hasattr(person,
+                                           'living_space_assigned') and person.living_space_assigned.name == name)]
+        occupants = office_occupants + living_space_occupants
+
         if len(occupants) == 0:
             print('{} has no occupants yet'.format(name))
 
         for occupant in occupants:
             print(occupant)
+
+    @staticmethod
+    def print_allocations(filename=''):
+        if len(Storage.rooms) == 0:
+            raise RuntimeError('no rooms in the system yet')
+
+        output = ''
+        for room in Storage.rooms:
+            output += '{}\n'.format(room.name)
+            output += '-------------------------------------\n'
+            office_occupants = [person.name for person in Storage.people if person.office_assigned.name == room.name]
+            living_space_occupants = [person.name for person in Storage.people if
+                                      (hasattr(person,
+                                               'living_space_assigned') and person.living_space_assigned.name == room.name)]
+            occupants = office_occupants + living_space_occupants
+            for occupant in occupants:
+                output += occupant
+                if occupant != occupants[-1]:
+                    output += ", "
+            output += '\n\n'
+
+        if filename != '':
+            file_handle = open(filename, 'w')
+            file_handle.write(output)
+            file_handle.close()
+        else:
+            print(output, end='')
+
+    @staticmethod
+    def print_unallocated(filename=''):
+        unallocated_persons = [person.name for person in Storage.people if
+                               person.office_assigned is None or
+                               (hasattr(person, 'living_space_assigned') and person.living_space_assigned is None)]
+
+        if len(unallocated_persons) == 0:
+            raise RuntimeError('no unallocated persons present')
+
+        output = ''
+        for person in unallocated_persons:
+            output += '{}\n'.format(person.name)
+
+        if filename != '':
+            file_handle = open(filename, 'w')
+            file_handle.write(output)
+            file_handle.close()
+        else:
+            print(output, end='')
 
 
 class Office(Room):

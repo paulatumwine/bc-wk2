@@ -25,7 +25,6 @@ class Person(object):
 
         self.id = generate_id()
         self.name = name
-        self.office_assigned = ''
 
         # Update program storage and counters; while remembering to check for duplicates first
         people_names = [person.name for person in Storage.people]
@@ -78,7 +77,6 @@ class Fellow(Person):
             raise TypeError('second argument should be one of \'Y\' or \'N\'')
 
         super().__init__(name)
-        self.living_space_assigned = ''
         print('{} {} has been successfully added.'.format(Fellow.person_type, name))
 
         self.allocate_office()
