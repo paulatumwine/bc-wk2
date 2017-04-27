@@ -4,6 +4,7 @@ from io import StringIO
 
 from app.room import *
 from app.person import *
+from app.utility import *
 
 
 class RoomTests(unittest.TestCase):
@@ -105,3 +106,33 @@ class RoomTests(unittest.TestCase):
             self.assertIn('Deal Jackson', output)
         finally:
             sys.stdout = captured_stdout
+
+    def test_reallocate_arguments_are_valid(self):
+        """Tests that the reallocate method only accepts string arguments"""
+        self.assertRaises(TypeError, Room.reallocate_person, 1)
+        self.assertRaises(TypeError, Room.reallocate_person, '', [])
+        self.assertRaises(TypeError, Room.reallocate_person, '12')
+        self.assertRaises(TypeError, Room.reallocate_person, 1, 2)
+        self.assertRaises(TypeError, Room.reallocate_person, '12', 'Office')
+
+    def test_can_reallocate_person_successfully(self):
+        """Test that a person can be reallocated successfully"""
+        initial_room_name = Storage.people[0].office_assigned.name
+        for room in Storage.rooms:
+            if room.name != initial_room_name:
+                room_to_assign = room
+                break
+        Room.reallocate_person(Storage.people[0].name, room_to_assign.name)
+        if room_to_assign.room_type == Office.room_type:
+            final_room_name = Storage.people[0].office_assigned.name
+        elif room_to_assign.room_type == LivingSpace.room_type:
+            final_room_name = Storage.people[0].living_space_assigned.name
+        self.assertNotEqual(initial_room_name, final_room_name, msg='Person not reassigned to different room')
+
+    def test_try_reallocation_of_person_that_does_not_exist(self):
+        """Test that only persons that exist can be reallocated"""
+        self.assertRaises(RuntimeError, Room.reallocate_person, 'Keele Jackson', 'RandomZero')  # inexistent person
+
+    def test_try_reallocation_to_room_that_does_not_exist(self):
+        """Test that only rooms that exist can be reallocated"""
+        self.assertRaises(RuntimeError, Room.reallocate_person, 'Reel Jackson', 'RandomTen')  # inexistent room
