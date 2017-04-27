@@ -43,7 +43,7 @@ class PersonTests(unittest.TestCase):
         half_way_person_count = Person.people_total
         self.assertEqual(half_way_person_count - initial_person_count, 1,
                          msg='Total count should have increased by one')
-        suspect_one = Fellow('Jill Jackson', 'Y')
+        suspect_one = Fellow('Jille Jackson', 'Y')
         self.assertIsInstance(suspect_one, Fellow, msg='Object should be an instance of the `Fellow` class')
         final_person_count = Person.people_total
         self.assertEqual(final_person_count - half_way_person_count, 1, msg='Total count should have increased by one')
@@ -101,3 +101,14 @@ class PersonTests(unittest.TestCase):
             self.assertIn('Peele has been allocated the livingspace', output)
         finally:
             sys.stdout = captured_stdout
+
+    def test_addition_of_duplicate_person(self):
+        """
+        Test to ensure no duplicate names are added to the app
+        """
+        suspect_zero = Staff('Till Jackson')
+        self.assertIsInstance(suspect_zero, Staff, msg='Object should be an instance of the `Staff` class')
+        self.assertRaises(TypeError, Staff, 'Till Jackson')
+        suspect_one = Fellow('Seal Jackson')
+        self.assertIsInstance(suspect_one, Fellow, msg='Object should be an instance of the `Fellow` class')
+        self.assertRaises(TypeError, Fellow, 'Seal Jackson')

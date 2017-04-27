@@ -59,9 +59,9 @@ class RoomTests(unittest.TestCase):
         try:
             sys.stdout = StringIO()
             captured_stdout = sys.stdout
-            Office('Office')
+            Office('OfficeOne')
             output = sys.stdout.getvalue().strip()
-            self.assertEquals(output, 'An office called Office has been successfully created!')
+            self.assertEquals(output, 'An office called OfficeOne has been successfully created!')
         finally:
             sys.stdout = captured_stdout
 
@@ -72,8 +72,19 @@ class RoomTests(unittest.TestCase):
         captured_stdout = sys.stdout
         try:
             sys.stdout = StringIO()
-            LivingSpace('LivingSpace')
+            LivingSpace('LivingSpaceOne')
             output = sys.stdout.getvalue().strip()
-            self.assertEquals(output, 'A livingspace called LivingSpace has been successfully created!')
+            self.assertEquals(output, 'A livingspace called LivingSpaceOne has been successfully created!')
         finally:
             sys.stdout = captured_stdout
+
+    def test_addition_of_duplicate_room(self):
+        """
+        Test to ensure no duplicate rooms are added to the app
+        """
+        room_zero = Office('RandomZero')
+        self.assertIsInstance(room_zero, Office, msg='Object should be an instance of the `Office` class')
+        self.assertRaises(TypeError, Office, 'RandomZero')
+        room_one = LivingSpace('RandomSpace')
+        self.assertIsInstance(room_one, LivingSpace, msg='Object should be an instance of the `LivingSpace` class')
+        self.assertRaises(TypeError, LivingSpace, 'RandomSpace')
