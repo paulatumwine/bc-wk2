@@ -5,12 +5,14 @@
     print_room <room_name>
     print_allocations [--outfile=FILE]
     print_unallocated [--outfile=FILE]
+    reallocate_person <person_identifier> <new_room_name>
+    load_people --infile=FILE
     dojo_app -i | --interactive | -h | --help | -v | --version
 
 Options:
-  -i, --interactive  Interactive mode.
-  -h --help     Show this screen.
-  -v --version  Show version.
+  -i, --interactive  interactive mode
+  -h --help     Show this screen
+  -v --version  Show version
 """
 import cmd
 from docopt import docopt, DocoptExit
@@ -30,12 +32,10 @@ def docopt_cmd(func):
             opt = docopt(fn.__doc__, arg)
             return func(self, opt)
         except Exception as e:
-            print('Sorry, an error occurred!')
-            print(e)
+            print('Error: {}'.format(e))
             return
         except DocoptExit as e:
-            print('Invalid Command!')
-            print(e)
+            print('Invalid Command: {}'.format(e))
             return
         except SystemExit:
             return
@@ -87,16 +87,37 @@ class DojoApp(cmd.Cmd):
         add_person <person_name> <FELLOW|STAFF> [wants_accommodation]
         add_person <arguments>...
         """
-        arguments = [element.upper() for element in arg['<arguments>']]
+        DojoApp.add_a_person(arg['<arguments>'])
+
+    @docopt_cmd
+    def do_reallocate_person(self, arg):
+        """
+        Usage: reallocate_person <person_identifier> <new_room_name>
+        Be sure to have both of these arguments surrounded with quotes
+        """
+        Room.reallocate_person(arg['<person_identifier>'], arg['<new_room_name>'])
+
+    @docopt_cmd
+    def do_load_people(self, arg):
+        """Usage: load_people --infile=FILE"""
+        lines = [line.rstrip('\n') for line in open(arg['--infile'])]
+
+        for line in lines:
+            DojoApp.add_a_person(line.split(' '))
+
+    @staticmethod
+    def add_a_person(arg_list):
+        """Reusable function to add a person"""
+        arguments = [element.upper() for element in arg_list]
         if 'STAFF' in arguments:
-            names = arg['<arguments>'][0:arguments.index('STAFF')]
+            names = arg_list[0:arguments.index('STAFF')]
             name = ' '.join(names)
             Staff(name)
         elif 'FELLOW' in arguments:
-            names = arg['<arguments>'][0:arguments.index('FELLOW')]
+            names = arg_list[0:arguments.index('FELLOW')]
             name = ' '.join(names)
-            if arg['<arguments>'][-1] in ['Y', 'N']:
-                Fellow(name, arg['<arguments>'][-1])
+            if arg_list[-1] in ['Y', 'N']:
+                Fellow(name, arg_list[-1])
             else:
                 Fellow(name)
 

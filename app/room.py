@@ -101,6 +101,37 @@ class Room(object):
         else:
             print(output, end='')
 
+    @staticmethod
+    def reallocate_person(person_name, room_name):
+        try:
+            if isinstance(int(person_name), int) or isinstance(int(room_name), int):
+                raise TypeError('no argument should be an integer')
+        except ValueError:
+            pass
+        if not isinstance(person_name, str) or not isinstance(room_name, str):
+            raise TypeError('arguments should be strings')
+
+        new_room = None
+        for room in Storage.rooms:
+            if room.name == room_name:
+                new_room = room
+                break
+        if new_room is None:
+            raise RuntimeError('room {} does not exist'.format(room_name))
+
+        person_in_qtn = None
+        for person in Storage.people:
+            if person.name == person_name:
+                person_in_qtn = person
+                break
+        if person_in_qtn is None:
+            raise RuntimeError('person {} does not exist'.format(person_name))
+
+        if new_room.room_type == Office.room_type:
+            person_in_qtn.office_assigned = new_room
+        elif new_room.room_type == LivingSpace.room_type:
+            person_in_qtn.living_space_assigned = new_room
+
 
 class Office(Room):
     """

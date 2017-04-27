@@ -60,9 +60,9 @@ class Person(object):
 
         # Either no rooms yet, or all that exist are full; in any case, create a new one
         if LivingSpace.room_type == room_type:
-            return LivingSpace('Random #{}'.format(LivingSpace.rooms_total + 1))
+            return LivingSpace('Random LivingSpace #{}'.format(LivingSpace.rooms_total + 1))
         else:
-            return Office('Random #{}'.format(Office.rooms_total + 1))
+            return Office('Random Office #{}'.format(Office.rooms_total + 1))
 
 
 class Fellow(Person):
