@@ -2,7 +2,7 @@ import sys
 import unittest
 from io import StringIO
 
-from app.room import Room, Office, LivingSpace
+from app.room import *
 
 
 class RoomTests(unittest.TestCase):

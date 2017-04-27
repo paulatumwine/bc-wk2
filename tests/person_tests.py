@@ -2,9 +2,22 @@ import sys
 import unittest
 from io import StringIO
 
-from app.person import Person, Fellow, Staff
+"""
+As a note on imports; probably only to my future self... using something like:
+
+from ..app.person import *
+
+Will get rid of the IDE errors in PyCharm, but when running from the top-level dir at 
+runtime, it will not resolve the path ..app. Instead, it will be expecting something like:
+
+from app.person import *
+
+at runtime, even though this gives errors in the IDE.
+"""
+from app.person import *
 
 
+# noinspection PyUnresolvedReferences
 class PersonTests(unittest.TestCase):
     """
     Unit tests for the Person class and all its descendants
