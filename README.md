@@ -1,7 +1,7 @@
 # Office Space Allocation
 
 [![Build Status](https://travis-ci.org/paulatumwine/bc-wk2.svg?branch=master)](https://travis-ci.org/paulatumwine/bc-wk2)
-
+[![Build Status](https://travis-ci.org/paulatumwine/bc-wk2.svg?branch=develop)](https://travis-ci.org/paulatumwine/bc-wk2)
 ## Intro
 This project aims to provide a not-so-sketchy app to digitize and randomize a room allocation system for one of Andela Kenya’s facilities - **The Dojo**.
 
